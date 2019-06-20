@@ -1,0 +1,11 @@
+[{
+  "modid": "lightningtweaks",
+  "name": "Lightning Tweaks",
+  "description": "Lightning now strikes taller, metallic, and rod shaped objects first! But if you wanted to go for a nice flight in the clouds, think again because players and mobs are at a large risk of lightning strikes.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://minecraft.curseforge.com/projects/lightning-tweaks",
+  "authorList": ["CaffeinatedPinkie"],
+  "useDependencyInformation": "true",
+  "dependencies": ["coroutil", "weather2"]
+}]
