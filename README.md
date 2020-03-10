@@ -7,9 +7,7 @@ The API will likely be changing rapidly during the early development of this bra
 <h3>To-Do</h3>
 <ul>
   <li>Add code documentation.</li>
-  <li>Add Forge auto-updater. It just notifies you in game when an update to the mod is available.</li>
   <li>Add lightning discharge map if JourneyMap is installed.</li>
-  <li>Add log messages for all the fancy magic this mod does.</li>
   <li>Add mod description.</li>
   <li>Add option to change how many chunks are searched when a lightning bolt is spawned.</li>
   <li>Apply this mod's logic to the lightning from Local Weather, Storms & Tornadoes. This may already be the case, but it's hard to tell; the mod author doesn't have a readily available way to summon lightning.</li>
