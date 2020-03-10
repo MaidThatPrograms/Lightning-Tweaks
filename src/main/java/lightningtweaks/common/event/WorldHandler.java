@@ -12,8 +12,10 @@ public class WorldHandler {
     @SubscribeEvent
     public static void onLoad(Load event) {
 	World world = event.getWorld();
-	if (!world.isRemote)
+	if (!world.isRemote) {
+	    System.out.println("Replacing weatherEffects in dimension " + world.provider.getDimension() + '!');
 	    ObfuscationReflectionHelper.setPrivateValue(World.class, world, new WeatherEffectsList(world),
 		    "field_73007_j"); // weatherEffects
+	}
     }
 }

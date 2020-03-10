@@ -22,6 +22,7 @@ public class EntityHandler {
 	if (entity instanceof EntityWeatherEffect) {
 	    World world = entity.getEntityWorld();
 	    if (!world.isRemote) {
+		System.out.println("Setting fire rule!");
 		GameRules gameRules = world.getGameRules();
 		if (gameRules.getBoolean(fireRule)) {
 		    map.add(world);

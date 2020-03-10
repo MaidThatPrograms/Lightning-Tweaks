@@ -1,0 +1,22 @@
+{
+	"homepage": "https://curseforge.com/minecraft/mc-mods/lightning-tweaks/files",
+	"1.12.2": {
+		"1.12.2-2.0.0.0-alpha1": "This is the first alpha release of Lightning Tweaks 2. It's a complete rewrite of the old versions, from the ground up. At the moment, only a few of the original features are available, but I wanted to make this release available to y'all. I've no ideas what kind of horrific bugs may be present in the code at this point in the game, and the ones I do know about might make this version unsuitable for survival worlds.",
+		"1.12.2-1.2.1.0": "Recursively index metal objects, better logging, and various fixes.",
+		"1.12.2-1.2.1.0-beta1": "Recursively index metal objects, better logging, and various fixes.",
+		"1.12.2-1.2.0.0": "This is a rather large update, with a number of API changes. Functionality should vary minimally, but the majority of known bugs have been phased out. I would strongly suggest updating to this version.",
+		"1.12.2-1.1.5.0": "Improved logging, fixed some bugs, and lightning now strikes metal items.",
+		"1.12.2-1.1.4.0": "Logging fixes, significantly faster block searching, random fixes.",
+		"1.12.2-1.1.3.1": "Some qOL changes to log messages. There are no changes to gameplay in this update.",
+		"1.12.2-1.1.3.0": "Optionally strike based on probability, fixed fire spawning, somewhat optimized searching.",
+		"1.12.2-1.1.2.0": "Simplified searching, improved fire spawning, dynamically detect metal objects on runtime, fixed fire spawning, fixed incorrect chances of certain blocks being chosen.",
+		"1.12.2-1.1.1.0": "Smaller update this time! In this one I'm mainly focusing on the API and code in the mod rather than features. Some of the changes should make both of these better and more efficient. The gameplay itself is still basically the same apart from more configuration.",
+		"1.12.2-1.1.0.0": "Various fixes and lightning now strikes metal armor.",
+		"1.12.2-1.0.0.1": "Just a minor patch.",
+		"1.12.2-1.0.0.0": "Initial Release!"
+	},
+	"promos": {
+		"1.12.2-latest": "1.12.2-2.0.0.0-alpha1",
+		"1.12.2-recommended": "1.12.2-1.2.1.0"
+	}
+}

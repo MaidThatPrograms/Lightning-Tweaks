@@ -10,6 +10,7 @@ import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import scala.actors.threadpool.Arrays;
 
 public class WeatherEffectsList extends ArrayList<Entity> {
     private static final SplittableRandom random = new SplittableRandom();
@@ -39,11 +40,17 @@ public class WeatherEffectsList extends ArrayList<Entity> {
 
     @Override
     public boolean add(Entity e) {
+	System.out.println("Choosing lightning bolt strike position!");
 	Chunk chunk = world.getChunk(e.getPosition());
 	List<int[]> coords = getCoords(chunk);
 	int[] coord = coords.get(random.nextInt(coords.size()));
-	e.setPositionAndUpdate(coord[0] + 16 * chunk.x, coord[1], coord[2] + 16 * chunk.z);
+	coord[0] += 16 * chunk.x;
+	coord[2] += 16 * chunk.z;
 
+	System.out.println("Moving lightning bolt from " + e.getPosition() + " to " + Arrays.toString(coord) + '!');
+	e.setPositionAndUpdate(coord[0], coord[1], coord[2]);
+
+	System.out.println("Setting fire options!");
 	setFireOptions(e);
 
 	return super.add(e);

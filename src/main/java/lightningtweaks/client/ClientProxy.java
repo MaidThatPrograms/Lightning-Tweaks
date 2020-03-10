@@ -8,6 +8,7 @@ import net.minecraft.entity.effect.EntityLightningBolt;
 public class ClientProxy implements IProxy {
     @Override
     public void postInit() {
+	System.out.println("Replacing lightning bolt renderer!");
 	RenderManager manager = Minecraft.getMinecraft().getRenderManager();
 	manager.entityRenderMap.put(EntityLightningBolt.class, new CustomRenderLightningBolt(manager));
     }
