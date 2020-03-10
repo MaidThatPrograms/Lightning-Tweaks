@@ -1,9 +1,9 @@
-package lightningtweaks.common.config;
+package lightningtweaks.common;
 
 import java.awt.Color;
 
 public class ConfigColor {
-    private float[] color = new float[] { .45F, .45F, .5F, .3F };
+    public float[] color = new float[] { .45F, .45F, .5F, .3F };
 
     public float alpha() {
 	return color[3];

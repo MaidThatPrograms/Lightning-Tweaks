@@ -2,7 +2,7 @@ package lightningtweaks.client;
 
 import java.util.Random;
 
-import lightningtweaks.common.config.LTConfig;
+import lightningtweaks.common.LTConfig;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
