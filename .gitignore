@@ -1,14 +1,10 @@
-# Directories
 .gradle
+.settings
 bin
 gradle
-libs
-libs-src
 run
-
-# Files
 .classpath
+.gitignore
 .project
-*.launch
 gradlew
 gradlew.bat
