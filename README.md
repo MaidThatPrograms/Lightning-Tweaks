@@ -1,6 +1,6 @@
 # Lightning-Tweaks
 
-This is the source code for the latest release of <a href="https://minecraft.curseforge.com/projects/lightning-tweaks">Lightning Tweaks</a> for Minecraft 1.15.2. I'll be keeping this branch up to date.
+This is the source code for the latest release of <a href="https://minecraft.curseforge.com/projects/lightning-tweaks">Lightning Tweaks</a> for Minecraft 1.15.x. I'll be keeping this branch up to date.
 
 The API will likely be changing rapidly during the early development of this branch.
 
