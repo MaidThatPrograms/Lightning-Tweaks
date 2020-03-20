@@ -6,7 +6,6 @@ The API will likely be changing rapidly during the early development of this bra
 
 <h3>To-Do</h3>
 <ul>
-	<li>Add code documentation.</li>
 	<li>Add lightning discharge map if JourneyMap is installed.</li>
 	<li>Add mod description.</li>
 	<li>Add option to change how many chunks are searched when a lightning bolt is spawned.</li>
