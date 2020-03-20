@@ -32,18 +32,18 @@ public class EntityHandler {
      * {@link World}'s {@link Difficulty} is set to {@link Difficulty#EASY}.<br>
      * <br>
      * The last thing a {@link LightningBoltEntity} does before finishing
-     * constructing is to call {@link LightningBoltEntity#igniteFire(int)}. This is
-     * before it is added to the {@link World}, but after this handler is alerted.
-     * Thus, changing the location of the {@link LightningBoltEntity} when it is
-     * added to the {@link World} does not prevent {@link FireBlock}s from being
-     * spawned around the initial strike position. Among a few other variables, the
-     * {@link Difficulty} of the {@link World} is checked before doing so. If it is
-     * {@link Difficulty#NORMAL} or {@link Difficulty#HARD}, {@link FireBlock}s are
-     * spawned.<br>
+     * constructing is to call {@link LightningBoltEntity#igniteBlocks(int)}. This
+     * is before it is added to the {@link World}, but after this handler is
+     * alerted. Thus, changing the location of the {@link LightningBoltEntity} when
+     * it is added to the {@link World} does not prevent {@link FireBlock}s from
+     * being spawned around the initial strike position. Among a few other
+     * variables, the {@link Difficulty} of the {@link World} is checked before
+     * doing so. If it is {@link Difficulty#NORMAL} or {@link Difficulty#HARD},
+     * {@link FireBlock}s are spawned.<br>
      * <br>
      * The intention of this method is to set the {@link Difficulty} of the
      * {@link World} to {@link Difficulty#EASY} before
-     * {@link LightningBoltEntity#igniteFire(int)} is called to prevent any
+     * {@link LightningBoltEntity#igniteBlocks(int)} is called to prevent any
      * {@link FireBlock} spawning. It also stores the current {@link Difficulty} to
      * be restored before the {@link LightningBoltEntity} is added to the
      * {@link World}. Since the {@link World} should not run any updates between

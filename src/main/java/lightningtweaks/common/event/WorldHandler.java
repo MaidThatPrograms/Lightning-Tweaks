@@ -39,7 +39,7 @@ public class WorldHandler {
      * <hr>
      * <b>Mappings</b>
      * <ul>
-     * <li><code>field_217497_w</code> -> {@link ServerWorld#globalEntities}</li>
+     * <li><code>field_217497_w</code> to {@link ServerWorld#globalEntities}</li>
      * </ul>
      *
      * @param event the {@link Load} event
