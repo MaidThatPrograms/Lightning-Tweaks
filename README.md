@@ -8,6 +8,7 @@ The API will likely be changing rapidly during the early development of this bra
 <ul>
 	<li>Add lightning discharge map if JourneyMap is installed.</li>
 	<li>Add mod description.</li>
+	<li>Add metallicity information to Hwyla tooltips.</li>
 	<li>Add option to change how many chunks are searched when a lightning bolt is spawned.</li>
 	<li>Add option to change the color of lightning.</li>
 	<li>Add option to completely disable fire spawning for lightning.</li>
