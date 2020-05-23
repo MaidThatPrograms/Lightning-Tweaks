@@ -14,11 +14,9 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-version = '1.15.2-0.0.1.0'
+version = '1.15.2-0.0.2.0'
 group = 'lightningtweaks'
 archivesBaseName = 'lightningtweaks'
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
     mappings channel: 'stable', version: '60-1.15'
@@ -26,10 +24,11 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-            //property 'forge.logging.console.level', 'debug'
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'info'
 
             mods {
-                lightningtweaks {
+                circuitry {
                     source sourceSets.main
                 }
             }
@@ -37,19 +36,11 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'info'
 
             mods {
-                lightningtweaks {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            mods {
-                lightningtweaks {
+                circuitry {
                     source sourceSets.main
                 }
             }
@@ -58,5 +49,5 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.1.0'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
 }

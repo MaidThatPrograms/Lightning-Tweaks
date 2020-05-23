@@ -4,8 +4,8 @@ bin
 build
 gradle
 run
-src/test
 .classpath
 .project
 gradlew
 gradlew.bat
+*.launch

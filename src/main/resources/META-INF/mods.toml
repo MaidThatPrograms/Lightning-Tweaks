@@ -1,6 +1,7 @@
 modLoader="javafml"
 loaderVersion="[31,)"
 issueTrackerURL="https://github.com/JamieBrassel/Lightning-Tweaks/issues"
+
 [[mods]]
 modId="lightningtweaks"
 version="${file.jarVersion}"

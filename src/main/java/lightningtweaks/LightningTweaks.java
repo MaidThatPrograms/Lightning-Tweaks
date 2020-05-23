@@ -1,11 +1,25 @@
 package lightningtweaks;
 
+import lightningtweaks.common.LTConfig;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 /**
- * Entry point for Lightning Tweaks! Super empty for the moment.
+ * Entry point for Lightning Tweaks!
  */
 @Mod("lightningtweaks")
+@EventBusSubscriber(bus = Bus.MOD)
 public class LightningTweaks {
-    // Nothing that needs to be executed during FML loading cycles... yet.
+	/**
+	 * TODO
+	 *
+	 * @param event TODO
+	 */
+	@SubscribeEvent
+	public static void commonSetup(@SuppressWarnings("unused") FMLCommonSetupEvent event) {
+		LTConfig.register();
+	}
 }
