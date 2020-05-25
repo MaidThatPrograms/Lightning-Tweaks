@@ -8,14 +8,10 @@ The API will likely be changing rapidly during the early development of this bra
 <ul>
 	<li>Add lightning discharge map if JourneyMap is installed.</li>
 	<li>Add mod description.</li>
-	<li>Add metallicity information to Hwyla tooltips.</li>
-	<li>Add option to change how many chunks are searched when a lightning bolt is spawned.</li>
+	<li>Add option to change how many chunks are searched when lightning is spawned.</li>
 	<li>Add option to change the color of lightning.</li>
-	<li>Add option to completely disable fire spawning for lightning.</li>
 	<li>Add update checker.</li>
-	<li>Make lightning sometimes strike living entities when they are real high up, wearing metal armor, or holding something metal and add config options to control this.</li>
-	<li>Make lightning strike metallic blocks more often than non-metallic blocks and add config options to control this.</li>
-	<li>Stop fire from spawning upon striking a metal object.</li>
+	<li>Adjust lightning behavior to model real world lightning. Basically, include factors besides just height.</li>
+	<li>Fix metallicity system to include missed blocks like Block of Iron and Block of Gold.</li>
+	<li>Write documentation.</li>
 </ul>
-
-Submit any issues to <a href="https://minecraft.curseforge.com/projects/lightning-tweaks/issues">the project page</a>.

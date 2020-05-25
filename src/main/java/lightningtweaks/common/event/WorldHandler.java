@@ -3,7 +3,9 @@ package lightningtweaks.common.event;
 import java.util.List;
 
 import lightningtweaks.common.GlobalEntitiesList;
+import lightningtweaks.common.MetallicityMap;
 import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.world.WorldEvent;
@@ -24,8 +26,10 @@ public class WorldHandler {
 	 * <br>
 	 * This method checks {@link IWorld#isRemote()} before executing any code. This
 	 * guarantees that the {@link IWorld} object can be safely cast to
-	 * {@link ServerWorld}. If this is the case, {@link ServerWorld#globalEntities}
-	 * is replaced with an instance of {@link GlobalEntitiesList}.<br>
+	 * {@link ServerWorld}. If this is the case, two things happen. First,
+	 * {@link MetallicityMap#update(RecipeManager)} is called. Second,
+	 * {@link ServerWorld#globalEntities} is replaced with an instance of
+	 * {@link GlobalEntitiesList}.<br>
 	 * <br>
 	 * All {@link LightningBoltEntity LightningBoltEntities} are added to the
 	 * {@link ServerWorld} via
@@ -47,8 +51,10 @@ public class WorldHandler {
 	@SubscribeEvent
 	public static void onLoad(Load event) {
 		IWorld world = event.getWorld();
-		if (!world.isRemote())
+		if (!world.isRemote()) {
+			MetallicityMap.update(((ServerWorld) world).getRecipeManager());
 			ObfuscationReflectionHelper.setPrivateValue(ServerWorld.class, (ServerWorld) world,
-					new GlobalEntitiesList((ServerWorld) world), "field_217497_w");
+					new GlobalEntitiesList(world), "field_217497_w");
+		}
 	}
 }

@@ -1,6 +1,9 @@
 package lightningtweaks.common;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -15,18 +18,8 @@ import net.minecraftforge.common.Tags;
 /**
  * TODO
  */
-public class MetallicityMap extends HashMap<Item, Double> {
-	/**
-	 * TODO
-	 *
-	 * @param manager TODO
-	 */
-	public MetallicityMap(RecipeManager manager) {
-		Tags.Items.NUGGETS.getAllElements().forEach(nugget -> put(nugget, 1D));
-		Multimap<Item, IRecipe<?>> recipeMap = HashMultimap.create();
-		manager.getRecipes().forEach(recipe -> recipeMap.put(recipe.getRecipeOutput().getItem(), recipe));
-		recipeMap.keySet().forEach(item -> get(item, recipeMap));
-	}
+public class MetallicityMap {
+	private static final Map<Item, Double> map = new HashMap<>();
 
 	/**
 	 * TODO
@@ -35,7 +28,7 @@ public class MetallicityMap extends HashMap<Item, Double> {
 	 * @param recipes    TODO
 	 * @return TODO
 	 */
-	private double[] get(Ingredient ingredient, Multimap<Item, IRecipe<?>> recipes) {
+	private static Pair<Double, Double> get(Ingredient ingredient, Multimap<Item, IRecipe<?>> recipes) {
 		double metallicity = 0;
 		int count = 0;
 		ItemStack[] stacks = ingredient.getMatchingStacks();
@@ -43,7 +36,7 @@ public class MetallicityMap extends HashMap<Item, Double> {
 			metallicity += get(stack.getItem(), recipes);
 			count += stack.getCount();
 		}
-		return new double[] { metallicity, (double) count / stacks.length };
+		return Pair.of(metallicity, (double) count / stacks.length);
 	}
 
 	/**
@@ -53,16 +46,26 @@ public class MetallicityMap extends HashMap<Item, Double> {
 	 * @param recipes TODO
 	 * @return TODO
 	 */
-	private double get(IRecipe<?> recipe, Multimap<Item, IRecipe<?>> recipes) {
+	private static double get(IRecipe<?> recipe, Multimap<Item, IRecipe<?>> recipes) {
 		double metallicity = 0;
 		double count = 0;
 		for (Ingredient ingredient : recipe.getIngredients())
 			if (!ingredient.hasNoMatchingItems()) {
-				double[] array = get(ingredient, recipes);
-				metallicity += array[0];
-				count += array[1];
+				Pair<Double, Double> pair = get(ingredient, recipes);
+				metallicity += pair.getLeft();
+				count += pair.getRight();
 			}
 		return metallicity / count;
+	}
+
+	/**
+	 * TODO
+	 *
+	 * @param item TODO
+	 * @return TODO
+	 */
+	public static double get(Item item) {
+		return map.getOrDefault(item, 0.0);
 	}
 
 	/**
@@ -72,13 +75,25 @@ public class MetallicityMap extends HashMap<Item, Double> {
 	 * @param recipes TODO
 	 * @return TODO
 	 */
-	private double get(Item item, Multimap<Item, IRecipe<?>> recipes) {
-		if (putIfAbsent(item, 0.0) == null) {
+	private static double get(Item item, Multimap<Item, IRecipe<?>> recipes) {
+		if (map.putIfAbsent(item, 0.0) == null) {
 			double metallicity = 0;
 			for (IRecipe<?> recipe : recipes.get(item))
 				metallicity = Math.max(metallicity, get(recipe, recipes));
-			put(item, metallicity);
+			map.put(item, metallicity);
 		}
-		return get(item);
+		return map.get(item);
+	}
+
+	/**
+	 * TODO
+	 *
+	 * @param manager TODO
+	 */
+	public static void update(RecipeManager manager) {
+		Tags.Items.NUGGETS.getAllElements().forEach(nugget -> map.put(nugget, 1.0));
+		Multimap<Item, IRecipe<?>> recipeMap = HashMultimap.create();
+		manager.getRecipes().forEach(recipe -> recipeMap.put(recipe.getRecipeOutput().getItem(), recipe));
+		recipeMap.keySet().forEach(item -> get(item, recipeMap));
 	}
 }

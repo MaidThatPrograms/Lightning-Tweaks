@@ -2,17 +2,17 @@ package lightningtweaks;
 
 import lightningtweaks.common.LTConfig;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 /**
  * Entry point for Lightning Tweaks!
  */
-@Mod("lightningtweaks")
-@EventBusSubscriber(bus = Bus.MOD)
+@Mod(LightningTweaks.MODID)
 public class LightningTweaks {
+	public static final String MODID = "lightningtweaks";
+
 	/**
-	 * TODO
+	 * The mod constructor for Lightning Tweaks. Registers the configuration file
+	 * through {@link LTConfig#register()}.
 	 */
 	public LightningTweaks() {
 		LTConfig.register();

@@ -19,7 +19,7 @@ public class LTConfig {
 	 * TODO
 	 */
 	private static final class Common {
-		private final DoubleValue heightWeight, metallicityThreshold, metallicityWeight;
+		private final DoubleValue metallicityThreshold;
 		private final BooleanValue realisticLightning, spawnFire;
 
 		/**
@@ -38,35 +38,10 @@ public class LTConfig {
 					.comment("Should lightning spawn fire where it strikes?",
 							"Only changes the behavior of lightning that would have otherwise spawned fire.")
 					.define("Spawn Fire", true);
-
-			builder.comment(
-					"Weight settings. Used to score block positions for lightning strikes. The normal range for each value is between zero and one.",
-					"Ignored if realistic lightning is disabled.").push("Weights");
-			heightWeight = builder.comment("How important the height of a block is to getting struck by lightning.")
-					.defineInRange("Height Weight", .5, 0, Double.MAX_VALUE);
-			metallicityWeight = builder
-					.comment("How important the metallicity of a block is to getting struck by lightning.")
-					.defineInRange("Metallicity Weight", .5, 0, Double.MAX_VALUE);
-			builder.pop();
 		}
 	}
 
-	private static final Common common;
-	private static final ForgeConfigSpec commonSpec;
-	static {
-		Pair<Common, ForgeConfigSpec> pair = new Builder().configure(Common::new);
-		common = pair.getLeft();
-		commonSpec = pair.getRight();
-	}
-
-	/**
-	 * TODO
-	 *
-	 * @return TODO
-	 */
-	public static double getHeightWeight() {
-		return common.heightWeight.get();
-	}
+	private static final Pair<Common, ForgeConfigSpec> commonPair = new Builder().configure(Common::new);
 
 	/**
 	 * TODO
@@ -74,16 +49,7 @@ public class LTConfig {
 	 * @return TODO
 	 */
 	public static double getMetallicityThreshold() {
-		return common.metallicityThreshold.get();
-	}
-
-	/**
-	 * TODO
-	 *
-	 * @return TODO
-	 */
-	public static double getMetallicityWeight() {
-		return common.metallicityWeight.get();
+		return commonPair.getLeft().metallicityThreshold.get();
 	}
 
 	/**
@@ -92,7 +58,7 @@ public class LTConfig {
 	 * @return TODO
 	 */
 	public static boolean getRealisticLightning() {
-		return common.realisticLightning.get();
+		return commonPair.getLeft().realisticLightning.get();
 	}
 
 	/**
@@ -101,7 +67,7 @@ public class LTConfig {
 	 * @return TODO
 	 */
 	public static boolean getSpawnFire() {
-		return common.spawnFire.get();
+		return commonPair.getLeft().spawnFire.get();
 	}
 
 	/**
@@ -110,6 +76,6 @@ public class LTConfig {
 	 * @return TODO
 	 */
 	public static void register() {
-		ModLoadingContext.get().registerConfig(Type.COMMON, commonSpec);
+		ModLoadingContext.get().registerConfig(Type.COMMON, commonPair.getRight());
 	}
 }
