@@ -1,14 +1,21 @@
 package lightningtweaks.common;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang3.tuple.Pair;
 
+import net.minecraft.item.Item;
+import net.minecraft.util.text.LanguageMap;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
-import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig.Type;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * TODO
@@ -19,7 +26,7 @@ public class LTConfig {
 	 * TODO
 	 */
 	private static final class Common {
-		private final DoubleValue metallicityThreshold;
+		private final ConfigValue<List<String>> metallicKeywords;
 		private final BooleanValue realisticLightning, spawnFire;
 
 		/**
@@ -28,9 +35,7 @@ public class LTConfig {
 		 * @param builder TODO
 		 */
 		public Common(Builder builder) {
-			metallicityThreshold = builder.comment(
-					"How metal a block needs to be for lightning to not spawn fire on striking it. Setting this to zero is effectively the same as disabling fire spawning.")
-					.defineInRange("Metallicity Threshold", .5, 0, 1);
+			metallicKeywords = builder.comment("TODO").define("Metallic Keywords", List.of("iron", "gold"));
 			realisticLightning = builder.comment(
 					"Should lightning strike high or metal blocks more often? This is the main behavior of this mod.")
 					.define("Realistic Lightning", true);
@@ -42,15 +47,7 @@ public class LTConfig {
 	}
 
 	private static final Pair<Common, ForgeConfigSpec> commonPair = new Builder().configure(Common::new);
-
-	/**
-	 * TODO
-	 *
-	 * @return TODO
-	 */
-	public static double getMetallicityThreshold() {
-		return commonPair.getLeft().metallicityThreshold.get();
-	}
+	private static final Set<Item> metallicItems = new HashSet<>();
 
 	/**
 	 * TODO
@@ -73,9 +70,26 @@ public class LTConfig {
 	/**
 	 * TODO
 	 *
+	 * @param item TODO
+	 * @return TODO
+	 */
+	public static boolean isMetallic(Item item) {
+		return metallicItems.contains(item);
+	}
+
+	/**
+	 * TODO
+	 *
 	 * @return TODO
 	 */
 	public static void register() {
 		ModLoadingContext.get().registerConfig(Type.COMMON, commonPair.getRight());
+
+		for (String string : commonPair.getLeft().metallicKeywords.get()) {
+			String filter = string.toLowerCase();
+			for (Item item : ForgeRegistries.ITEMS)
+				if (LanguageMap.func_74808_a().translateKey(item.getTranslationKey()).toLowerCase().contains(filter))
+					metallicItems.add(item);
+		}
 	}
 }

@@ -57,8 +57,8 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 				BlockPos pos = getBlockPos(e);
 				e.setPosition(pos.getX(), pos.getY(), pos.getZ());
 			}
-			if (!LTConfig.getSpawnFire() || LTConfig.getMetallicityThreshold() <= MetallicityMap
-					.get(world.getBlockState(e.getPosition().offset(Direction.DOWN)).getBlock().asItem()))
+			if (!LTConfig.getSpawnFire() || LTConfig
+					.isMetallic(world.getBlockState(e.getPosition().offset(Direction.DOWN)).getBlock().asItem()))
 				ObfuscationReflectionHelper.setPrivateValue(LightningBoltEntity.class, (LightningBoltEntity) e, true,
 						"effectOnly");
 		}

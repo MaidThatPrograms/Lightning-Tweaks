@@ -7,11 +7,12 @@ The API will likely be changing rapidly during the early development of this bra
 <h3>To-Do</h3>
 <ul>
 	<li>Add lightning discharge map if JourneyMap is installed.</li>
+	<li>Add log messages for debugging purposes.</li>
 	<li>Add mod description.</li>
 	<li>Add option to change how many chunks are searched when lightning is spawned.</li>
 	<li>Add option to change the color of lightning.</li>
 	<li>Add update checker.</li>
 	<li>Adjust lightning behavior to model real world lightning. Basically, include factors besides just height.</li>
-	<li>Fix metallicity system to include missed blocks like Block of Iron and Block of Gold.</li>
+	<li>Change methods and fields to be public instead of private in case someone wishes to alter the behavior of this mod.</li>
 	<li>Write documentation.</li>
 </ul>
