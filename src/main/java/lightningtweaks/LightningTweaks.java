@@ -23,7 +23,7 @@ public class LightningTweaks {
 	 */
 	public static void log(String message) {
 		if (LTConfig.isVerbose())
-			logger.info(message);
+			logger.info('[' + MODID + "] " + message);
 	}
 
 	/**

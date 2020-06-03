@@ -14,10 +14,9 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
-version = '1.15.2-1.0.0.0'
+version = '1.15.2-1.0.0.1'
 group = 'lightningtweaks'
 archivesBaseName = 'lightningtweaks'
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '10'
 
 minecraft {
     mappings channel: 'stable', version: '60-1.15'

@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.ImmutableList;
+
 import lightningtweaks.LightningTweaks;
 import net.minecraft.item.Item;
 import net.minecraft.util.text.LanguageMap;
@@ -37,7 +39,7 @@ public class LTConfig {
 			metallicItems = new HashSet<>();
 			metallicKeywords = builder.comment(
 					"Keywords used to determine what items and blocks are considered metallic. An item or block is considered metallic if any of the keywords are contained within its localized name.",
-					"Case does not matter.").define("Metallic Keywords", List.of("iron", "gold"));
+					"Case does not matter.").define("Metallic Keywords", ImmutableList.of("gold", "iron"));
 			realisticLightning = builder.comment(
 					"Should lightning strike high or metal blocks more often? This is the main behavior of this mod.")
 					.define("Realistic Lightning", true);
