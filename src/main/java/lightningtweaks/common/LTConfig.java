@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import lightningtweaks.LightningTweaks;
 import net.minecraft.item.Item;
 import net.minecraft.util.text.LanguageMap;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -22,12 +23,10 @@ import net.minecraftforge.registries.ForgeRegistries;
  */
 @EventBusSubscriber
 public class LTConfig {
-	/**
-	 * TODO
-	 */
-	private static final class Common {
-		private final ConfigValue<List<String>> metallicKeywords;
-		private final BooleanValue realisticLightning, spawnFire;
+	public static class Common {
+		public Set<Item> metallicItems;
+		public ConfigValue<List<String>> metallicKeywords;
+		public BooleanValue realisticLightning, spawnFire, verbose;
 
 		/**
 		 * TODO
@@ -35,7 +34,10 @@ public class LTConfig {
 		 * @param builder TODO
 		 */
 		public Common(Builder builder) {
-			metallicKeywords = builder.comment("TODO").define("Metallic Keywords", List.of("iron", "gold"));
+			metallicItems = new HashSet<>();
+			metallicKeywords = builder.comment(
+					"Keywords used to determine what items and blocks are considered metallic. An item or block is considered metallic if any of the keywords are contained within its localized name.",
+					"Case does not matter.").define("Metallic Keywords", List.of("iron", "gold"));
 			realisticLightning = builder.comment(
 					"Should lightning strike high or metal blocks more often? This is the main behavior of this mod.")
 					.define("Realistic Lightning", true);
@@ -43,19 +45,19 @@ public class LTConfig {
 					.comment("Should lightning spawn fire where it strikes?",
 							"Only changes the behavior of lightning that would have otherwise spawned fire.")
 					.define("Spawn Fire", true);
+			verbose = builder.comment("Should log messages for this mod be posted?").define("Verbose", true);
 		}
 	}
 
-	private static final Pair<Common, ForgeConfigSpec> commonPair = new Builder().configure(Common::new);
-	private static final Set<Item> metallicItems = new HashSet<>();
+	public static Pair<Common, ForgeConfigSpec> pair = new Builder().configure(Common::new);
 
 	/**
 	 * TODO
 	 *
 	 * @return TODO
 	 */
-	public static boolean getRealisticLightning() {
-		return commonPair.getLeft().realisticLightning.get();
+	public static boolean doRealisticLightning() {
+		return pair.getLeft().realisticLightning.get();
 	}
 
 	/**
@@ -63,18 +65,26 @@ public class LTConfig {
 	 *
 	 * @return TODO
 	 */
-	public static boolean getSpawnFire() {
-		return commonPair.getLeft().spawnFire.get();
+	public static boolean doSpawnFire() {
+		return pair.getLeft().spawnFire.get();
 	}
 
 	/**
 	 * TODO
 	 *
-	 * @param item TODO
 	 * @return TODO
 	 */
-	public static boolean isMetallic(Item item) {
-		return metallicItems.contains(item);
+	public static Set<Item> getMetallicItems() {
+		return pair.getLeft().metallicItems;
+	}
+
+	/**
+	 * TODO
+	 *
+	 * @return TODO
+	 */
+	public static boolean isVerbose() {
+		return pair.getLeft().verbose.get();
 	}
 
 	/**
@@ -83,13 +93,17 @@ public class LTConfig {
 	 * @return TODO
 	 */
 	public static void register() {
-		ModLoadingContext.get().registerConfig(Type.COMMON, commonPair.getRight());
-
-		for (String string : commonPair.getLeft().metallicKeywords.get()) {
-			String filter = string.toLowerCase();
+		ModLoadingContext.get().registerConfig(Type.COMMON, pair.getRight());
+		Set<Item> metallicItems = pair.getLeft().metallicItems;
+		metallicItems.clear();
+		pair.getLeft().metallicKeywords.get().forEach(keyword -> {
+			keyword = keyword.toLowerCase();
+			LanguageMap languageMap = LanguageMap.func_74808_a();
 			for (Item item : ForgeRegistries.ITEMS)
-				if (LanguageMap.func_74808_a().translateKey(item.getTranslationKey()).toLowerCase().contains(filter))
+				if (languageMap.translateKey(item.getTranslationKey()).toLowerCase().contains(keyword))
 					metallicItems.add(item);
-		}
+		});
+		LightningTweaks.log("Stored the following items as metallic: " + metallicItems + '.');
+		LightningTweaks.log("Registered configuration file.");
 	}
 }

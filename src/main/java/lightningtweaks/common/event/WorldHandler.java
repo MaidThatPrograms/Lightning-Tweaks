@@ -2,6 +2,7 @@ package lightningtweaks.common.event;
 
 import java.util.List;
 
+import lightningtweaks.LightningTweaks;
 import lightningtweaks.common.GlobalEntitiesList;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.world.IWorld;
@@ -47,8 +48,10 @@ public class WorldHandler {
 	@SubscribeEvent
 	public static void onLoad(Load event) {
 		IWorld world = event.getWorld();
-		if (!world.isRemote())
+		if (!world.isRemote()) {
 			ObfuscationReflectionHelper.setPrivateValue(ServerWorld.class, (ServerWorld) world,
 					new GlobalEntitiesList(world), "field_217497_w");
+			LightningTweaks.log("Applied mod logic", world);
+		}
 	}
 }

@@ -21,23 +21,25 @@ import net.minecraft.util.text.TranslationTextComponent;
  */
 @WailaPlugin
 public class MetallicityPlugin implements IComponentProvider, IWailaPlugin {
-	private static final ResourceLocation config_metallic = new ResourceLocation(LightningTweaks.MODID, "metallic");
+	public static ResourceLocation configMetallic = new ResourceLocation(LightningTweaks.MODID, "metallic");
 
 	/**
 	 * TODO
 	 */
+	@Override
 	public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
-		if (config.get(config_metallic))
+		if (config.get(configMetallic))
 			tooltip.add(new TranslationTextComponent(
-					"config.waila.plugin_" + config_metallic.getNamespace() + '.' + config_metallic.getPath())
-							.appendText(": " + LTConfig.isMetallic(accessor.getBlock().asItem())));
+					"config.waila.plugin_" + configMetallic.getNamespace() + '.' + configMetallic.getPath())
+							.appendText(": " + LTConfig.getMetallicItems().contains(accessor.getBlock().asItem())));
 	}
 
 	/**
 	 * TODO
 	 */
+	@Override
 	public void register(IRegistrar registrar) {
-		registrar.addConfig(config_metallic, false);
+		registrar.addConfig(configMetallic, false);
 		registrar.registerComponentProvider(this, TooltipPosition.BODY, Block.class);
 	}
 }

@@ -3,6 +3,7 @@ package lightningtweaks.common.event;
 import java.util.HashMap;
 import java.util.Map;
 
+import lightningtweaks.LightningTweaks;
 import net.minecraft.block.FireBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.LightningBoltEntity;
@@ -20,7 +21,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
  */
 @EventBusSubscriber
 public class EntityHandler {
-	private static final Map<IWorld, Difficulty> difficulties = new HashMap<>();
+	public static Map<IWorld, Difficulty> difficulties = new HashMap<>();
 
 	/**
 	 * Fired when an {@link Entity} is constructing.<br>
@@ -61,6 +62,8 @@ public class EntityHandler {
 			if (!world.isRemote()) {
 				difficulties.put(world, world.getDifficulty());
 				setDifficulty(world, Difficulty.EASY);
+				LightningTweaks.log("Set world difficulty to " + world.getDifficulty().name()
+						+ " to prevent lightning from spawning fire", world);
 			}
 		}
 	}
@@ -85,7 +88,7 @@ public class EntityHandler {
 	 * @param difficulty the {@link Difficulty} to change the {@link IWorld}'s
 	 *                   {@link Difficulty} to
 	 */
-	private static void setDifficulty(IWorld world, Difficulty difficulty) {
+	public static void setDifficulty(IWorld world, Difficulty difficulty) {
 		world.getWorldInfo().setDifficulty(difficulty);
 	}
 }

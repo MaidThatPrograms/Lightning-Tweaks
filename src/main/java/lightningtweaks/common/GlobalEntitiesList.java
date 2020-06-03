@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SplittableRandom;
 
+import lightningtweaks.LightningTweaks;
 import lightningtweaks.common.event.EntityHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.LightningBoltEntity;
@@ -22,8 +23,8 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  * {@link Entity} and apply this mod's logic to it.
  */
 public class GlobalEntitiesList extends ArrayList<Entity> {
-	private static final SplittableRandom random = new SplittableRandom();
-	private final IWorld world;
+	public static SplittableRandom random = new SplittableRandom();
+	public IWorld world;
 
 	/**
 	 * Constructs an instance of {@link GlobalEntitiesList} on an instance of
@@ -52,15 +53,19 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 	@Override
 	public boolean add(Entity e) {
 		EntityHandler.revertDifficulty(world);
+		LightningTweaks.log("Reverted difficulty to " + world.getDifficulty().name(), world);
 		if (e instanceof LightningBoltEntity) {
-			if (LTConfig.getRealisticLightning()) {
+			if (LTConfig.doRealisticLightning()) {
 				BlockPos pos = getBlockPos(e);
+				LightningTweaks.log("Moved lightning from " + e.getPosition() + " to " + pos, world);
 				e.setPosition(pos.getX(), pos.getY(), pos.getZ());
 			}
-			if (!LTConfig.getSpawnFire() || LTConfig
-					.isMetallic(world.getBlockState(e.getPosition().offset(Direction.DOWN)).getBlock().asItem()))
+			if (!LTConfig.doSpawnFire() || LTConfig.getMetallicItems()
+					.contains(world.getBlockState(e.getPosition().offset(Direction.DOWN)).getBlock().asItem())) {
 				ObfuscationReflectionHelper.setPrivateValue(LightningBoltEntity.class, (LightningBoltEntity) e, true,
 						"effectOnly");
+				LightningTweaks.log("Disabled fire spawning from lightning at " + e.getPosition(), world);
+			}
 		}
 		return super.add(e);
 	}
@@ -80,7 +85,7 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 	 *         given {@link Entity}'s {@link IChunk}, according to
 	 *         {@link Type#MOTION_BLOCKING}
 	 */
-	private BlockPos getBlockPos(Entity e) {
+	public BlockPos getBlockPos(Entity e) {
 		IChunk chunk = world.getChunk(e.getPosition());
 		Heightmap heightmap = chunk.getHeightmap(Type.MOTION_BLOCKING);
 		int max = 0;
