@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import lightningtweaks.common.LTConfig;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.fml.common.Mod;
 
@@ -32,7 +32,7 @@ public class LightningTweaks {
 	 * @param message TODO
 	 * @param world   TODO
 	 */
-	public static void log(String message, IWorld world) {
+	public static void log(String message, World world) {
 		log(message + " in dimension " + DimensionType.getKey(world.getDimension().getType()) + '.');
 	}
 

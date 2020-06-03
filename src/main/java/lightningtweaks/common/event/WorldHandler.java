@@ -5,7 +5,7 @@ import java.util.List;
 import lightningtweaks.LightningTweaks;
 import lightningtweaks.common.GlobalEntitiesList;
 import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
@@ -19,12 +19,11 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 @EventBusSubscriber
 public class WorldHandler {
 	/**
-	 * Fired on an {@link IWorld} {@link Load} event. The name is pretty
-	 * self-explanatory: whenever the user or the server loads an
-	 * {@link IWorld}.<br>
+	 * Fired on an {@link World} {@link Load} event. The name is pretty
+	 * self-explanatory: whenever the user or the server loads an {@link World}.<br>
 	 * <br>
-	 * This method checks {@link IWorld#isRemote()} before executing any code. This
-	 * guarantees that the {@link IWorld} object can be safely cast to
+	 * This method checks {@link World#isRemote()} before executing any code. This
+	 * guarantees that the {@link World} object can be safely cast to
 	 * {@link ServerWorld}. If this is the case, {@link ServerWorld#globalEntities}
 	 * is replaced with an instance of {@link GlobalEntitiesList}.<br>
 	 * <br>
@@ -47,11 +46,11 @@ public class WorldHandler {
 	 */
 	@SubscribeEvent
 	public static void onLoad(Load event) {
-		IWorld world = event.getWorld();
+		World world = event.getWorld().getWorld();
 		if (!world.isRemote()) {
+			LightningTweaks.log("Replacing ServerWorld#globalEntities", world);
 			ObfuscationReflectionHelper.setPrivateValue(ServerWorld.class, (ServerWorld) world,
 					new GlobalEntitiesList(world), "field_217497_w");
-			LightningTweaks.log("Applied mod logic", world);
 		}
 	}
 }

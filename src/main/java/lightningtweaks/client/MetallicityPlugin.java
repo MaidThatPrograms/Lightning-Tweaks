@@ -14,6 +14,9 @@ import mcp.mobius.waila.api.WailaPlugin;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
 /**
@@ -28,10 +31,13 @@ public class MetallicityPlugin implements IComponentProvider, IWailaPlugin {
 	 */
 	@Override
 	public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
-		if (config.get(configMetallic))
+		if (config.get(configMetallic)) {
+			boolean metallic = LTConfig.getMetallicItems().contains(accessor.getBlock().asItem());
 			tooltip.add(new TranslationTextComponent(
 					"config.waila.plugin_" + configMetallic.getNamespace() + '.' + configMetallic.getPath())
-							.appendText(": " + LTConfig.getMetallicItems().contains(accessor.getBlock().asItem())));
+							.appendText(": ").appendSibling(new StringTextComponent(String.valueOf(metallic)))
+							.setStyle(new Style().setColor(metallic ? TextFormatting.GREEN : TextFormatting.RED)));
+		}
 	}
 
 	/**

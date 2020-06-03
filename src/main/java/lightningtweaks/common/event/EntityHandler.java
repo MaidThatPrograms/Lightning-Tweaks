@@ -1,14 +1,15 @@
 package lightningtweaks.common.event;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import lightningtweaks.LightningTweaks;
 import net.minecraft.block.FireBlock;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.GameRules.BooleanValue;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
@@ -21,16 +22,17 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
  */
 @EventBusSubscriber
 public class EntityHandler {
-	public static Map<IWorld, Difficulty> difficulties = new HashMap<>();
+	public static Set<World> doFireTicks = new HashSet<>();
 
 	/**
 	 * Fired when an {@link Entity} is constructing.<br>
 	 * <br>
 	 * This method checks that the {@link Entity} is both an instance of
 	 * {@link LightningBoltEntity} and that its {@link World#isRemote()} returns
-	 * true. If this is the case, the current {@link Difficulty} is stored in
-	 * {@link #difficulties} along with the {@link World} object. Then, the
-	 * {@link World}'s {@link Difficulty} is set to {@link Difficulty#EASY}.<br>
+	 * true. If this is the case, and the current value for
+	 * {@link GameRules#DO_FIRE_TICK} is true, the {@link World} object is stored in
+	 * {@link #doFireTicks}. Then, the value of {@link GameRules#DO_FIRE_TICK} is
+	 * set to false.<br>
 	 * <br>
 	 * The last thing a {@link LightningBoltEntity} does before finishing
 	 * constructing is to call {@link LightningBoltEntity#igniteBlocks(int)}. This
@@ -38,57 +40,53 @@ public class EntityHandler {
 	 * alerted. Thus, changing the location of the {@link LightningBoltEntity} when
 	 * it is added to the {@link World} does not prevent {@link FireBlock}s from
 	 * being spawned around the initial strike position. Among a few other
-	 * variables, the {@link Difficulty} of the {@link World} is checked before
-	 * doing so. If it is {@link Difficulty#NORMAL} or {@link Difficulty#HARD},
-	 * {@link FireBlock}s are spawned.<br>
+	 * variables, the value of {@link GameRules#DO_FIRE_TICK} is checked before
+	 * doing so. If it is true, {@link FireBlock}s are spawned.<br>
 	 * <br>
-	 * The intention of this method is to set the {@link Difficulty} of the
-	 * {@link World} to {@link Difficulty#EASY} before
+	 * The intention of this method is to set the value of
+	 * {@link GameRules#DO_FIRE_TICK} to false before
 	 * {@link LightningBoltEntity#igniteBlocks(int)} is called to prevent any
-	 * {@link FireBlock} spawning. It also stores the current {@link Difficulty} to
-	 * be restored before the {@link LightningBoltEntity} is added to the
-	 * {@link World}. Since the {@link World} should not run any updates between
-	 * {@link LightningBoltEntity} being constructed and being added, this shouldn't
-	 * cause any changes to already spawned {@link Entity Entities}.
+	 * {@link FireBlock} spawning. It also stores the information needed to restore
+	 * the current value of {@link GameRules#DO_FIRE_TICK} before the
+	 * {@link LightningBoltEntity} is added to the {@link World}. Since the
+	 * {@link World} should not run any updates between {@link LightningBoltEntity}
+	 * being constructed and being added, this shouldn't cause any changes to the
+	 * world.
 	 *
 	 * @param event the {@link EntityConstructing} event
 	 */
 	@SubscribeEvent
 	public static void onConstructing(EntityConstructing event) {
 		Entity entity = event.getEntity();
-		if (entity instanceof LightningBoltEntity) {
-			@SuppressWarnings("resource")
+		if (entity.getType() == EntityType.LIGHTNING_BOLT) {
 			World world = entity.getEntityWorld();
 			if (!world.isRemote()) {
-				difficulties.put(world, world.getDifficulty());
-				setDifficulty(world, Difficulty.EASY);
-				LightningTweaks.log("Set world difficulty to " + world.getDifficulty().name()
-						+ " to prevent lightning from spawning fire", world);
+				BooleanValue gamerule = world.getGameRules().get(GameRules.DO_FIRE_TICK);
+				if (gamerule.get()) {
+					doFireTicks.add(world);
+					LightningTweaks.log("Setting " + GameRules.DO_FIRE_TICK + " to false", world);
+					gamerule.set(false, world.getServer());
+				}
 			}
 		}
 	}
 
 	/**
-	 * Sets the {@link Difficulty} of the given {@link IWorld} to the value stored
-	 * in {@link #difficulties}. Then removes the matching {@link World} entry from
-	 * {@link #difficulties}. It is assumed that all calls to this method pass in
-	 * {@link World} objects that are present in {@link #difficulties}.
+	 * TODO
 	 *
-	 * @param world the {@link IWorld} to set the {@link Difficulty} of
+	 * @param world TODO
+	 * @return TODO
 	 */
-	public static void revertDifficulty(IWorld world) {
-		setDifficulty(world, difficulties.remove(world));
+	public static boolean removeDoFireTick(World world) {
+		return doFireTicks.remove(world);
 	}
 
 	/**
-	 * Sets the {@link Difficulty} of the given {@link IWorld} to the given
-	 * {@link Difficulty}.
+	 * TODO
 	 *
-	 * @param world      the {@link IWorld} to change the {@link Difficulty} of
-	 * @param difficulty the {@link Difficulty} to change the {@link IWorld}'s
-	 *                   {@link Difficulty} to
+	 * @param world TODO
 	 */
-	public static void setDifficulty(IWorld world, Difficulty difficulty) {
-		world.getWorldInfo().setDifficulty(difficulty);
+	public static void revertDoFireTick(World world) {
+		world.getGameRules().get(GameRules.DO_FIRE_TICK).set(true, world.getServer());
 	}
 }
