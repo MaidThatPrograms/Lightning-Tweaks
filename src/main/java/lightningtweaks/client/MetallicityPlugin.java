@@ -35,8 +35,8 @@ public class MetallicityPlugin implements IComponentProvider, IWailaPlugin {
 			boolean metallic = LTConfig.getMetallicItems().contains(accessor.getBlock().asItem());
 			tooltip.add(new TranslationTextComponent(
 					"config.waila.plugin_" + configMetallic.getNamespace() + '.' + configMetallic.getPath())
-							.appendText(": ").appendSibling(new StringTextComponent(String.valueOf(metallic)))
-							.setStyle(new Style().setColor(metallic ? TextFormatting.GREEN : TextFormatting.RED)));
+							.appendText(": ").appendSibling(new StringTextComponent(String.valueOf(metallic)).setStyle(
+									new Style().setColor(metallic ? TextFormatting.GREEN : TextFormatting.RED))));
 		}
 	}
 

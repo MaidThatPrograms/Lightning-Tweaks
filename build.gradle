@@ -1,51 +1,51 @@
 buildscript {
-    repositories {
-        maven {
+	repositories {
+		maven {
 			url = 'https://files.minecraftforge.net/maven'
 		}
-        jcenter()
-        mavenCentral()
-    }
+		jcenter()
+		mavenCentral()
+	}
 	
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-    }
+	dependencies {
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+	}
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
-version = '1.15.2-1.1.0.0'
+version = '1.15.2-1.1.1.0'
 group = 'lightningtweaks'
 archivesBaseName = 'lightningtweaks'
 
 minecraft {
-    mappings channel: 'stable', version: '60-1.15'
+	mappings channel: 'stable', version: '60-1.15'
 	
-    runs {
-        client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'info'
+	runs {
+		client {
+			workingDirectory project.file('run')
+			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.console.level', 'info'
 
-            mods {
-                circuitry {
-                    source sourceSets.main
-                }
-            }
-        }
+			mods {
+				circuitry {
+					source sourceSets.main
+				}
+			}
+		}
 
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'info'
+		server {
+			workingDirectory project.file('run')
+			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.console.level', 'info'
 
-            mods {
-                circuitry {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
+			mods {
+				circuitry {
+					source sourceSets.main
+				}
+			}
+		}
+	}
 }
 
 repositories {
@@ -55,6 +55,6 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
-    compile fg.deobf('mcp.mobius.waila:Hwyla:1.10.8-B72_1.15.2')
+	minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
+	compile fg.deobf('mcp.mobius.waila:Hwyla:1.10.8-B72_1.15.2')
 }

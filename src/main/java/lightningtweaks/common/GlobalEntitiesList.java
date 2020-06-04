@@ -7,15 +7,18 @@ import java.util.SplittableRandom;
 
 import lightningtweaks.LightningTweaks;
 import lightningtweaks.common.event.EntityHandler;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.Heightmap.Type;
 import net.minecraft.world.server.ServerWorld;
@@ -28,6 +31,25 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  */
 public class GlobalEntitiesList extends ArrayList<Entity> {
 	public static SplittableRandom random = new SplittableRandom();
+
+	/**
+	 * TODO
+	 *
+	 * @param max   TODO
+	 * @param poses TODO
+	 * @param pos   TODO
+	 * @return TODO
+	 */
+	public static double scoreBlockPos(double max, List<BlockPos> poses, BlockPos pos) {
+		double score = pos.getY();
+		if (score < max)
+			return max;
+		if (score > max)
+			poses.clear();
+		poses.add(pos);
+		return score;
+	}
+
 	public World world;
 
 	/**
@@ -62,7 +84,9 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 	public boolean add(Entity entity) {
 		if (entity.getType() == EntityType.LIGHTNING_BOLT) {
 			if (ObfuscationReflectionHelper.getPrivateValue(LightningBoltEntity.class, (LightningBoltEntity) entity,
-					"field_204810_e") == null) {
+					"field_204810_e") == null
+					&& world.getEntitiesWithinAABB(EntityType.SKELETON_HORSE, entity.getBoundingBox().grow(0, 1, 0),
+							skelly -> true).isEmpty()) {
 				if (LTConfig.doRealisticLightning())
 					moveLightning(entity);
 
@@ -82,37 +106,34 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 	}
 
 	/**
-	 * Finds the highest {@link Block} or {@link Block}s in the {@link IChunk} of
-	 * the given {@link Entity}. This is done by accessing the {@link IChunk}'s
-	 * {@link Heightmap} of {@link Type#MOTION_BLOCKING}. That {@link Type} is used
-	 * to match the vanilla method
-	 * {@link ServerWorld#adjustPosToNearbyEntity(BlockPos)} which used before
-	 * naturally spawning {@link LightningBoltEntity LightningBoltEntities}. If
+	 * Finds the highest {@link Block} or {@link Block}s in the {@link Chunk} of the
+	 * given {@link Entity}. This is done by accessing the {@link Chunk}'s
+	 * {@link Heightmap} of {@link Type#MOTION_BLOCKING}. All {@link Entity
+	 * Entities} within the {@link Chunk} are also compared at their eye heights. If
 	 * multiple {@link BlockPos}es have equal heights, one is chosen randomly using
 	 * {@link SplittableRandom#nextInt(int)}.
 	 *
-	 * @param entity the {@link Entity} whose {@link IChunk} will be searched
-	 * @return the {@link BlockPos} of one of the highest {@link Block}s in the
-	 *         given {@link Entity}'s {@link IChunk}, according to
-	 *         {@link Type#MOTION_BLOCKING}
+	 * @param entity the {@link Entity} whose {@link Chunk} will be searched
+	 * @return the {@link BlockPos} of one of the highest {@link Block}s or
+	 *         {@link Entity Entities} in the given {@link Entity}'s {@link Chunk},
+	 *         according to {@link Type#MOTION_BLOCKING}
 	 */
 	public BlockPos getBlockPos(Entity entity) {
-		IChunk chunk = world.getChunk(entity.getPosition());
+		Chunk chunk = world.getChunkAt(entity.getPosition());
 		Heightmap heightmap = chunk.getHeightmap(Type.MOTION_BLOCKING);
-		int max = 0;
+		ChunkPos chunkPos = chunk.getPos();
+
+		double max = 0;
 		List<BlockPos> poses = new ArrayList<>();
 		for (int x = 0; x < 16; x++)
-			for (int z = 0; z < 16; z++) {
-				int height = heightmap.getHeight(x, z);
-				if (height > max) {
-					max = height;
-					poses.clear();
-				}
-				if (height == max)
-					poses.add(new BlockPos(x, height, z));
-			}
-		BlockPos pos = poses.get(random.nextInt(poses.size()));
-		return chunk.getPos().getBlock(pos.getX(), pos.getY(), pos.getZ());
+			for (int z = 0; z < 16; z++)
+				max = scoreBlockPos(max, poses, chunkPos.getBlock(x, heightmap.getHeight(x, z), z));
+		for (ClassInheritanceMultiMap<Entity> entities : chunk.getEntityLists())
+			for (Entity entity1 : entities)
+				if (entity1.onGround)
+					max = scoreBlockPos(max, poses, new BlockPos(entity1.getEyePosition(1)).up());
+
+		return poses.get(random.nextInt(poses.size()));
 	}
 
 	/**

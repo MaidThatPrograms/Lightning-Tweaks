@@ -107,8 +107,6 @@ public class LTConfig {
 
 	/**
 	 * TODO
-	 *
-	 * @return TODO
 	 */
 	public static void register() {
 		LightningTweaks.log("Registering configuration file.");
