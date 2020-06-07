@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.SplittableRandom;
 
 import lightningtweaks.LightningTweaks;
+import lightningtweaks.common.ResistivityMap.Resistivity;
 import lightningtweaks.common.event.EntityHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.util.ClassInheritanceMultiMap;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.Difficulty;
@@ -30,7 +30,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  * {@link Entity} and apply this mod's logic to it.
  */
 public class GlobalEntitiesList extends ArrayList<Entity> {
-	public static SplittableRandom random = new SplittableRandom();
+	private static final SplittableRandom random = new SplittableRandom();
 
 	/**
 	 * TODO
@@ -40,7 +40,7 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 	 * @param pos   TODO
 	 * @return TODO
 	 */
-	public static double scoreBlockPos(double max, List<BlockPos> poses, BlockPos pos) {
+	private static double scoreBlockPos(double max, List<BlockPos> poses, BlockPos pos) {
 		double score = pos.getY();
 		if (score < max)
 			return max;
@@ -50,7 +50,7 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 		return score;
 	}
 
-	public World world;
+	private final World world;
 
 	/**
 	 * Constructs an instance of {@link GlobalEntitiesList} on an instance of
@@ -90,8 +90,7 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 				if (LTConfig.doRealisticLightning())
 					moveLightning(entity);
 
-				if (!LTConfig.doSpawnFire() || LTConfig.getMetallicItems()
-						.contains(world.getBlockState(entity.getPosition().offset(Direction.DOWN)).getBlock().asItem()))
+				if (!LTConfig.doSpawnFire() || getResistivity(entity.getPosition()) == Resistivity.CONDUCTOR)
 					setEffectOnly(entity);
 			}
 
@@ -118,13 +117,13 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 	 *         {@link Entity Entities} in the given {@link Entity}'s {@link Chunk},
 	 *         according to {@link Type#MOTION_BLOCKING}
 	 */
-	public BlockPos getBlockPos(Entity entity) {
+	private BlockPos getBlockPos(Entity entity) {
+		double max = 0;
+		List<BlockPos> poses = new ArrayList<>();
+
 		Chunk chunk = world.getChunkAt(entity.getPosition());
 		Heightmap heightmap = chunk.getHeightmap(Type.MOTION_BLOCKING);
 		ChunkPos chunkPos = chunk.getPos();
-
-		double max = 0;
-		List<BlockPos> poses = new ArrayList<>();
 		for (int x = 0; x < 16; x++)
 			for (int z = 0; z < 16; z++)
 				max = scoreBlockPos(max, poses, chunkPos.getBlock(x, heightmap.getHeight(x, z), z));
@@ -138,6 +137,16 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 
 	/**
 	 * TODO
+	 *
+	 * @param pos TODO
+	 * @return TODO
+	 */
+	private Resistivity getResistivity(BlockPos pos) {
+		return ResistivityMap.getType(world.getBlockState(pos.func_177977_b()).getBlock().asItem());
+	}
+
+	/**
+	 * TODO
 	 * <hr>
 	 * <b>Mappings</b>
 	 * <ul>
@@ -147,7 +156,7 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 	 *
 	 * @param entity TODO
 	 */
-	public void igniteBlocks(Entity entity) {
+	private void igniteBlocks(Entity entity) {
 		try {
 			int extraIgnitions = LTConfig.getExtraIgnitions();
 			LightningTweaks.log(
@@ -165,7 +174,7 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 	 *
 	 * @param entity TODO
 	 */
-	public void moveLightning(Entity entity) {
+	private void moveLightning(Entity entity) {
 		BlockPos pos = getBlockPos(entity);
 		LightningTweaks.log("Moving lightning from " + entity.getPosition() + " to " + pos, world);
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
@@ -174,7 +183,7 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 	/**
 	 * TODO
 	 */
-	public void revertDoFireTick() {
+	private void revertDoFireTick() {
 		LightningTweaks.log("Reverting " + GameRules.DO_FIRE_TICK + " to true", world);
 		EntityHandler.revertDoFireTick(world);
 	}
@@ -189,7 +198,7 @@ public class GlobalEntitiesList extends ArrayList<Entity> {
 	 *
 	 * @param entity TODO
 	 */
-	public void setEffectOnly(Entity entity) {
+	private void setEffectOnly(Entity entity) {
 		LightningTweaks.log("Setting LightningBoltEntity#effectOnly to true at " + entity.getPosition(), world);
 		ObfuscationReflectionHelper.setPrivateValue(LightningBoltEntity.class, (LightningBoltEntity) entity, true,
 				"field_184529_d");

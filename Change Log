@@ -1,4 +1,0 @@
--Added a realistic lightning exception for skeleton traps.
--Added entities within to the scoring system. Now you don't want to be the tallest object around. That said, if you're not grounded, you have nothing to worry about.
--Fixed the color formatting for the Hwyla tooltip changing the entire message, rather than just the value.
--Prepared the scoring system to have more complex variables than just height.
