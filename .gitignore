@@ -1,0 +1,10 @@
+.gradle
+.settings
+bin
+gradle
+run
+.classpath
+.project
+gradlew
+gradlew.bat
+*.launch

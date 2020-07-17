@@ -1,0 +1,13 @@
+modLoader="javafml"
+loaderVersion="[31,)"
+issueTrackerURL="https://github.com/JamieBrassel/Lightning-Tweaks/issues"
+
+[[mods]]
+modId="lightningtweaks"
+version="${file.jarVersion}"
+displayName="Lightning Tweaks"
+displayURL="https://curseforge.com/minecraft/mc-mods/lightning-tweaks"
+logoFile="lightningtweaks.png"
+authors="Jamie Brassel"
+description='''A collection of tweaks to the vanilla lightning system in Minecraft.
+Everything is fully customizable, with options to make lightning choose the path of least resistance, prevent fire from spawning from lightning, and more.'''
