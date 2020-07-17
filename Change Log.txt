@@ -1,2 +1,0 @@
--Added configurable lists to the configuration for conductors and insulators.
--Reverted some methods and fields to private so that internal things can be changed without changing the public API.
