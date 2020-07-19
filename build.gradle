@@ -19,13 +19,11 @@ group = 'lightningtweaks'
 archivesBaseName = 'lightningtweaks'
 
 minecraft {
-	mappings channel: 'stable', version: '60-1.15'
+	mappings channel: 'snapshot', version: '20200514-1.15.1'
 	
 	runs {
 		client {
 			workingDirectory project.file('run')
-			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-			property 'forge.logging.console.level', 'info'
 
 			mods {
 				circuitry {
@@ -36,8 +34,6 @@ minecraft {
 
 		server {
 			workingDirectory project.file('run')
-			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-			property 'forge.logging.console.level', 'info'
 
 			mods {
 				circuitry {
@@ -50,11 +46,19 @@ minecraft {
 
 repositories {
 	maven {
-		url = 'https://tehnut.info/maven'
+		url = 'https://maven.tehnut.info'
 	}
 }
 
 dependencies {
 	minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
 	compile fg.deobf('mcp.mobius.waila:Hwyla:1.10.8-B72_1.15.2')
+}
+
+jar {
+	manifest {
+		attributes([
+			"Implementation-Version": "${version}"
+		])
+	}
 }

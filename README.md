@@ -4,7 +4,7 @@ This is the source code for the latest release of <a href="https://curseforge.co
 
 <h3>Compatible Versions </h3>
 <ul>
-  <li>1.15.x</li>
+	<li>1.15.x</li>
 </ul>
 
 <h3>To-Do</h3>

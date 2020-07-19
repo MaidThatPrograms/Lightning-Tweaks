@@ -1,6 +1,5 @@
 .gradle
 .settings
-bin
 gradle
 run
 .classpath
